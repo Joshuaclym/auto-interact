@@ -1,58 +1,66 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Jul  6 15:34:26 2020
+Created on Wed Jul 22 13:07:58 2020
 
-@author: joshua clymer
+@author: joshu
 """
 
-import instagram_private_api as instaAPI
-import pprint
-import numpy as np
-import time
+from instapy import InstaPy
+from instapy import smart_run
+import random
+# login credentials
+insta_username = 'duglapp'
+insta_password = 'Duglisawesome'
 
-user_name = 'clymerjoshua'
-password = 'J0$hu@1Wormgear'
+comments = ['Nice! :thumbsup:', 'I love your profile! @{}',
+            'Love your posts @{}', 'Getting inspired by you @{}', ':raised_hands: Yes!']
+hashtags = ['productivity', 'productivitytips', 'goals', 'mondaymotivation',
+            'selfimprovement', 'personaldevelopment', 'reflection', 'habit',
+            'goalsetting', 'dailymotivation', 'selfhelp',
+            'inspireothers', 'gogetit', 'financialfreedom', 'weighttraining',
+            'getfit', 'gymtime', 'youcandoit', 'justdoit', 'motivational',
+            'healthyhabits', 'eatinghealthy', 'gains', 'progress', 'grind',
+            'diet', 'hustle', 'success', 'wealth', 'workout', 'fitfam',
+            'selflove', 'meditation', 'selfcare', 'loveyourself', 'bodypositive',
+            'confidence', 'intention', 'intentionalliving']
 
-api = instaAPI.Client(user_name, password, auto_patch = True)
+# get an InstaPy session!
+# set headless_browser=True to run InstaPy in the background
+session = InstaPy(username=insta_username,
+                  password=insta_password,
+                  headless_browser=True)
+session.login()
+while True:
+    # settings
+    session.set_dont_unfollow_active_users(enabled=True, posts=5)
+    session.set_quota_supervisor(enabled=True, sleep_after=["likes", "comments_d", "follows", "unfollows", "server_calls_h"], sleepyhead=True, stochastic_flow=True, notify_me=True,
+                                 peak_likes_hourly=57,
+                                 peak_likes_daily=585,
+                                 peak_comments_hourly=21,
+                                 peak_comments_daily=182,
+                                 peak_follows_hourly=48,
+                                 peak_follows_daily=None,
+                                 peak_unfollows_hourly=35,
+                                 peak_unfollows_daily=402,
+                                 peak_server_calls_hourly=None,
+                                 peak_server_calls_daily=4700)
+    session.set_relationship_bounds(enabled=True,
+                                    potency_ratio=1.34,
+                                    delimit_by_numbers=True,
+                                    max_followers=8500,
+                                    max_following=4490,
+                                    min_followers=100,
+                                    min_following=56,
+                                    min_posts=10,
+                                    max_posts=1000)
 
-pp = pprint.PrettyPrinter(indent=4)
+    hashtags_in_use = random.sample(hashtags, 10)
 
-def randWait(avgtime):
-    waitFor = np.random.normal(loc = avgtime, scale = avgtime * 0.3)
-    if waitFor < 0:
-        waitFor = 0
-    time.sleep(waitFor)
-    return
+    # let's do this :>
+    session.like_by_tags(hashtags_in_use, amount=20)
+    session.set_dont_like(["naked", "nsfw", "fuck", "shit"])
+    session.set_do_follow(True, percentage=50)
+    session.set_do_comment(True, percentage=50)
 
-
-def likePostsOnFeed():
-    next_max_id = ""
-    while True:
-        if next_max_id == "":
-            feed = api.feed_timeline()
-        else:
-            feed = api.feed_timeline(max_id = next_max_id)
-        next_max_id = feed['next_max_id']
-        print("requesting another page")
-        posts = [item for item in feed.get('feed_items', [])
-                 if item.get('media_or_ad')]  
-        for post in posts:
-            id = post['media_or_ad']['id']
-            user_full_name = post['media_or_ad']['user']['username']
-            try:
-                api.post_like(id, module_name='feed_timeline')
-                print('botty boy liked post by {}'.format(user_full_name))
-            except Exception as e: 
-                print(e)
-        randWait(1)
-        
-#Main
-
-
-#post_comment(media_id, comment_text)
-"""
-for media_id in media_ids:
-    instaAPI.post_like(media_id, module_name='feed_timeline')
-"""
-
-#feed_tag(tag, rank_token, **kwargs) potentially use this function to comment on posts in #selfimprovement
+    session.unfollow_users(amount=40, allFollowing=True,
+                           style="LIFO", unfollow_after=3*60*60, sleep_delay=450)
