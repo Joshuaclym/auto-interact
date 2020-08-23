@@ -32,7 +32,6 @@ session = InstaPy(username=insta_username,
 session.login()
 while True:
     # settings
-    session.set_dont_unfollow_active_users(enabled=True, posts=5)
     session.set_quota_supervisor(enabled=True, sleep_after=["likes", "comments_d", "follows", "unfollows", "server_calls_h"], sleepyhead=True, stochastic_flow=True, notify_me=True,
                                  peak_likes_hourly=57,
                                  peak_likes_daily=585,
