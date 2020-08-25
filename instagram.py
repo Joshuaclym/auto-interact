@@ -57,10 +57,10 @@ for i in range(12):
 
     hashtags_in_use = random.sample(hashtags, 10)
     users_in_use = random.sample(users, 10)
-    set_user_interact(amount = 5, percentage = 50, randomize = True)
-    set_comments(comments)
-    set_do_follow(True, percentage = 50, times = 1)
-    set_do_comment(True, percentage = 50)
+    session.set_user_interact(amount = 5, percentage = 50, randomize = True)
+    session.set_comments(comments)
+    session.set_do_follow(True, percentage = 50, times = 1)
+    session.set_do_comment(True, percentage = 50)
     session.set_dont_like(dont_like_these)
     
     
@@ -68,4 +68,4 @@ for i in range(12):
     session.unfollow_users(amount=50, allFollowing=True,
                                        style="LIFO", unfollow_after=3*60*60, sleep_delay=450)
     session.like_by_tags(hashtags_in_use, amount=4, skip_top_posts= True, use_smart_hashtags = True, interact = True, randomize = True)
-    follow_likers(users_in_use, photos_grab_amount = 1, follow_likers_per_photo = 2, randomize = True, interact = True)
+    session.follow_likers(users_in_use, photos_grab_amount = 1, follow_likers_per_photo = 2, randomize = True, interact = True)
