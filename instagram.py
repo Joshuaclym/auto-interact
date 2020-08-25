@@ -23,14 +23,16 @@ hashtags = ['productivity', 'productivitytips', 'goals', 'mondaymotivation',
             'diet', 'hustle', 'success', 'wealth', 'workout', 'fitfam',
             'selflove', 'meditation', 'selfcare', 'loveyourself', 'bodypositive',
             'confidence', 'intention', 'intentionalliving']
+users = ['robinsharma','joshua_becker','iamjoelbrown','michaelhyatt','elephantjournal','melrobbinslive','alexikonn','mj.demarco','garyvee','tombilyeu','steven','motivation_mondays','nowfuture','6amsuccess','24hoursuccess','motivationmafia','the.success.club','addicted2success','shredded_life','millionaire_mentor','secrets2success','AmbitionCircle','MindsetofGreatness','Before5AM','LuxQuotes','TheFitnessGirlsGuide','SuccessBlueprint','WordsofSuccess','Millionaire.Dream']
 
+dont_like_these = ['naked','nsfw','boob','bath','girls','adult','cuckold','hentai','chaturbate','hotties','sexxxx','pornsex','localgirls','pornlive','nsfwvideo','instablowjob','instansfw','instaadult']
 # get an InstaPy session!
 # set headless_browser=True to run InstaPy in the background
 session = InstaPy(username=insta_username,
                   password=insta_password,
                   headless_browser=True)
 session.login()
-while True:
+for i in range(12):
     # settings
     session.set_quota_supervisor(enabled=True, sleep_after=["likes", "comments_d", "follows", "unfollows", "server_calls_h"], sleepyhead=True, stochastic_flow=True, notify_me=True,
                                  peak_likes_hourly=57,
@@ -54,12 +56,16 @@ while True:
                                     max_posts=1000)
 
     hashtags_in_use = random.sample(hashtags, 10)
-
+    users_in_use = random.sample(users, 10)
+    set_user_interact(amount = 5, percentage = 50, randomize = True)
+    set_comments(comments)
+    set_do_follow(True, percentage = 50, times = 1)
+    set_do_comment(True, percentage = 50)
+    session.set_dont_like(dont_like_these)
+    
+    
     # let's do this :>
-    session.like_by_tags(hashtags_in_use, amount=20)
-    session.set_dont_like(["naked", "nsfw", "fuck", "shit"])
-    session.set_do_follow(True, percentage=50)
-    session.set_do_comment(True, percentage=50)
-
-    session.unfollow_users(amount=40, allFollowing=True,
-                           style="LIFO", unfollow_after=3*60*60, sleep_delay=450)
+    session.unfollow_users(amount=50, allFollowing=True,
+                                       style="LIFO", unfollow_after=3*60*60, sleep_delay=450)
+    session.like_by_tags(hashtags_in_use, amount=4, skip_top_posts= True, use_smart_hashtags = True, interact = True, randomize = True)
+    follow_likers(users_in_use, photos_grab_amount = 1, follow_likers_per_photo = 2, randomize = True, interact = True)
